@@ -69,3 +69,75 @@ function showConfetti() {
 
     document.body.appendChild(confettiScript);
 }
+function updateQuantity(monster, change) {
+    // Obtendo o elemento da quantidade e dos pontos
+    let quantityElement = document.getElementById(monster + 'Quantity');
+    let pointsElement = document.getElementById(monster + 'Points');
+    let valueElement = document.getElementById(monster + 'Value');
+    
+    let points = parseInt(pointsElement.textContent);
+    points += change;
+    
+    // Evitar valores negativos
+    if (points < 0) points = 0;
+    
+    pointsElement.textContent = points;
+
+    // Atualizando a porcentagem de progresso
+    let progress = (points / getMaxPoints(monster)) * 100;
+    valueElement.textContent = progress.toFixed(2) + '%';
+
+    // Atualizando a quantidade na interface
+    quantityElement.textContent = points;
+
+    // Salvando no localStorage
+    localStorage.setItem(monster + 'Points', points);
+    localStorage.setItem(monster + 'Quantity', points);
+    localStorage.setItem(monster + 'Progress', progress.toFixed(2));
+}
+window.onload = function() {
+    loadProgress('gosmas');
+    loadProgress('brutoDasSombras');
+    loadProgress('morcego');
+    loadProgress('esqueleto');
+    loadProgress('inseto');
+    loadProgress('cavador');
+    loadProgress('espiritoDaPoeira');
+    loadProgress('caranguejoPedra');
+    loadProgress('mumia');
+    loadProgress('pimentaRex');
+    loadProgress('serpente');
+    loadProgress('espiritoDeMagma');
+};
+
+// Função para carregar o progresso de um monstro
+function loadProgress(monster) {
+    let points = localStorage.getItem(monster + 'Points');
+    let quantity = localStorage.getItem(monster + 'Quantity');
+    let progress = localStorage.getItem(monster + 'Progress');
+
+    if (points && quantity && progress) {
+        document.getElementById(monster + 'Points').textContent = points;
+        document.getElementById(monster + 'Quantity').textContent = quantity;
+        document.getElementById(monster + 'Value').textContent = progress + '%';
+    }
+}
+
+// Função para obter o máximo de pontos de cada monstro (ajuste conforme a necessidade)
+function getMaxPoints(monster) {
+    const maxPoints = {
+        gosmas: 1000,
+        brutoDasSombras: 150,
+        morcego: 200,
+        esqueleto: 50,
+        inseto: 125,
+        cavador: 30,
+        espiritoDaPoeira: 500,
+        caranguejoPedra: 60,
+        mumia: 100,
+        pimentaRex: 50,
+        serpente: 250,
+        espiritoDeMagma: 150
+    };
+    return maxPoints[monster] || 0;
+}
